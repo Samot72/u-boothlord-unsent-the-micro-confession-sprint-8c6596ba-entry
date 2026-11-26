@@ -34,6 +34,18 @@ function validate(entry) {
   if (!lines[0].startsWith("To: ")) {
     throw new Error('first line must start with "To: "');
   }
+  const addressee = lines[0].slice(4).trim();
+  if (addressee.length === 0) {
+    throw new Error('the "To:" line must name someone');
+  }
+  if (codePoints(addressee) > 60) {
+    throw new Error(
+      `addressee is ${codePoints(addressee)} code points, must be at most 60`,
+    );
+  }
+  if (entry.includes("\r")) {
+    throw new Error("entry must not contain carriage returns");
+  }
   if (lines[1].trim().length === 0) {
     throw new Error("message line must not be empty");
   }
